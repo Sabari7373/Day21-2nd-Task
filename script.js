@@ -1,60 +1,74 @@
-let div=document.createElement("div");
-div.setAttribute("class","container-fluid");
-div.setAttribute("id","division");
-let head=document.createElement("h1");
-head.setAttribute("id","hd");
-head.innerHTML="GLOBAL COVID19 DETAILS"
-let nav=document.createElement("nav")
-nav.setAttribute("id","nav")
-nav.setAttribute("class","navbar navbar-light bg-info")
-let ptag=document.createElement("p");
-ptag.setAttribute("id","pta")
-ptag.innerHTML="<br>( Just wait min)"
-nav.append(head);
-nav.append(ptag);
-div.append(nav);
-document.body.append(div);
-let divc=document.createElement("div");
-divc.setAttribute("class","container-fluid");
-let tab =document.createElement("table");
-tab.setAttribute("class","table table-striped table-dark");
-tab.innerHTML=`<thead>
-                  <tr>
-                      <th scope="col">Country Name</th>
-                      <th scope="col">Conformed Cases</th>
-                      <th scope="col">Death</th>
-                      <th scope="col">Case_Fatality_Ratio</th>
-                      <th scope="col">Incident_Rate</th>
-                  </tr>
-               </thead>`
-const tbody=document.createElement("tbody")
-tbody.setAttribute("class","tbod");
-tab.append(tbody);
-divc.append(tab);
-document.body.append(divc);
+let container=document.createElement("div");
+container.setAttribute("class","container");
 
-const covid= new Promise((resolve, reject) => {
-    let request = new XMLHttpRequest();
-    request.open("GET","https://coronavirus.m.pipedream.net/");
-    request.send();
-    request.onload=function(){
-       if (request.status==200){
-        let data= JSON.parse(request.response)
-        resolve(data)
-       }else{
-        reject("some error not found")
-       }
-    }
-})
-covid.then((res)=>{console.log(res.rawData)
-res.rawData.map((ele)=>{
-  tbody.innerHTML+=` <tr>
-                      <td>${ele.Combined_Key}</td>
-                      <td>${ele.Confirmed}</td>
-                      <td>${ele.Deaths}</td>
-                      <td>${ele.Case_Fatality_Ratio}</td>
-                      <td>${ele.Incident_Rate}</td>
-                    </tr>`
-                 })
-})
-.catch((rej)=>{console.log(rej)});
+let div1=document.createElement("div");
+div1.setAttribute("class","main");
+div1.setAttribute("id","main")
+
+let h1= document.createElement("h1");
+h1.setAttribute("class","Mainheading")
+h1.innerHTML="Covid-19";
+
+let pra=document.createElement("p");
+pra.setAttribute("id","discription");
+pra.innerHTML="Enter the name correctly";
+
+let div2=document.createElement("div");
+div2.setAttribute("id","main2");
+
+let div3=document.createElement("div");
+div3.setAttribute("id","main3");
+
+let input=document.createElement("input")
+input.setAttribute("type","text");
+input.setAttribute("min-length","3");
+input.setAttribute("placeholder","Enter the country name")
+input.setAttribute("class","form-control");
+input.setAttribute("id","country");
+input.setAttribute("req","required");
+
+let search=document.createElement("button");
+search.setAttribute("type","button");
+search.setAttribute("value","Search")
+search.setAttribute("class","btn btn-primary");
+search.setAttribute("id","search");
+search.innerHTML="Search";
+
+search.addEventListener("click",foo);
+
+async function foo(){
+    let val=document.getElementById("country").value;
+    var url=`https://api.covid19api.com/dayone/country/${val}`;
+    
+    let res= await fetch(url);
+    let res1= await res.json();
+    active.innerHTML=`Total Active Case:${res1[res1.length-1].Active}`
+    Confirmed.innerHTML=`Total Confirmed Case:${res1[res1.length-1].Confirmed}`
+    recovered.innerHTML=`Total Recovered Case:${res1[res1.length-1].Recovered}`
+    dead.innerHTML=`Total Death Case:${res1[res1.length-1].Deaths}`
+}
+
+let flag=document.createElement("div");
+flag.setAttribute("id","flag")
+
+let active=document.createElement("div")
+active.setAttribute("id","active");
+
+let Confirmed=document.createElement("div")
+Confirmed.setAttribute("id","confirmed");
+
+
+
+let recovered=document.createElement("div")
+recovered.setAttribute("id","recovered")
+
+
+let dead=document.createElement("div")
+dead.setAttribute("id","dead");
+
+
+div1.append(h1,pra);
+div2.append(input,search)
+div3.append(flag,active,Confirmed,recovered,dead)
+container.append(div1,div2,div3);
+document.body.append(container);
